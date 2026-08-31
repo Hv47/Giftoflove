@@ -1,0 +1,1134 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>For My Love</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Quicksand:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;1,500&family=Caveat:wght@500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --main-red: #d6334a;
+        --deep-red: #a8253a;
+        --gold: #f0c869;
+        --text-dark: #5a3d41;
+        --paper: #f3e6c8;
+        --glass: rgba(255, 255, 255, 0.14);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        font-family: "Quicksand", sans-serif;
+        background-image:
+          linear-gradient(
+            180deg,
+            rgba(20, 5, 10, 0.35) 0%,
+            rgba(20, 5, 10, 0.15) 40%,
+            rgba(20, 5, 10, 0.55) 100%
+          ),
+          url("ChatGPT Image Aug 21, 2026, 09_29_42 PM.jpg");
+        background-size: cover;
+        background-position: center;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      /* ---------- shared bits ---------- */
+      .owner {
+        display: block;
+        font-size: clamp(14px, 4vw, 22px);
+        text-align: center;
+        color: white;
+        font-style: italic;
+        margin-bottom: 10px;
+        opacity: 0.9;
+      }
+
+      .red {
+        color: var(--main-red);
+      }
+
+      .screen {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        z-index: 10;
+        padding: 20px;
+      }
+      .active {
+        display: flex;
+        animation: fadeIn 0.8s forwards;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .glass-card {
+        background: var(--glass);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        border: 1px solid rgba(255, 255, 255, 0.28);
+        border-radius: 32px;
+        padding: clamp(26px, 7vw, 46px) clamp(22px, 6vw, 40px);
+        box-shadow:
+          0 25px 60px rgba(0, 0, 0, 0.35),
+          inset 0 1px 0 rgba(255, 255, 255, 0.35);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .img1,
+      .cat-img {
+        width: 180px;
+        max-width: 50%;
+        border-radius: 50px;
+        margin-bottom: 20px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      }
+
+      .title-red {
+        font-size: clamp(2rem, 10vw, 4.2rem);
+        color: var(--main-red);
+        font-weight: 900;
+        margin: 0;
+        text-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
+      }
+
+      .sub-text {
+        font-size: clamp(0.9rem, 4vw, 1.1rem);
+        color: #fff;
+        margin-bottom: 30px;
+        font-weight: 600;
+        opacity: 0.92;
+      }
+
+      .btn-row {
+        display: flex;
+        gap: 20px;
+      }
+
+      .circle-btn {
+        width: clamp(60px, 15vw, 80px);
+        height: clamp(60px, 15vw, 80px);
+        border-radius: 50%;
+        border: none;
+        background: linear-gradient(145deg, var(--main-red), var(--deep-red));
+        color: white;
+        font-size: 2rem;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow:
+          0 8px 20px rgba(0, 0, 0, 0.35),
+          inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        transition: transform 0.2s;
+      }
+      .circle-btn:active {
+        transform: scale(0.9);
+      }
+
+      #musicTriggerScreen {
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(6px);
+        z-index: 100;
+      }
+      .play-music-btn {
+        padding: 16px 38px;
+        font-size: clamp(1.2rem, 5vw, 1.8rem);
+        background: linear-gradient(145deg, var(--main-red), var(--deep-red));
+        color: white;
+        border: none;
+        border-radius: 60px;
+        cursor: pointer;
+        font-weight: bold;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+        animation: pulseBtn 1.8s ease-in-out infinite;
+      }
+      @keyframes pulseBtn {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+      }
+
+      .polaroid {
+        background: white;
+        padding: 5px 5px 20px 5px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        position: absolute;
+        transition: all 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        z-index: 2;
+      }
+      .polaroid img {
+        width: clamp(60px, 15vw, 80px);
+        height: clamp(60px, 15vw, 80px);
+        object-fit: cover;
+      }
+      .polaroid::after {
+        content: "Gifts of Love";
+        position: absolute;
+        bottom: 3px;
+        width: 100%;
+        left: 0;
+        font-size: 0.5rem;
+        font-family: "Playfair Display", serif;
+      }
+
+      /* RESPONSIVE CENTER LABEL */
+      .center-label {
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-family: "Dancing Script", cursive;
+        font-size: clamp(1.8rem, 8vw, 3rem);
+        color: var(--main-red);
+        text-shadow: 2px 2px white;
+        opacity: 0;
+        transition:
+          opacity 1s,
+          top 0.5s;
+        z-index: 20;
+        white-space: nowrap;
+        pointer-events: none;
+      }
+
+      @media (max-width: 767px) {
+        .center-label {
+          top: 12%;
+          transform: translate(-50%, 0);
+        }
+      }
+      @media (min-width: 768px) {
+        .center-label {
+          top: 50%;
+        }
+      }
+
+      .gallery-rows {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        width: 100%;
+        height: 100%;
+        justify-content: center;
+      }
+      .row {
+        display: flex;
+        gap: 10px;
+        width: 250%;
+      }
+      .row .polaroid {
+        position: relative;
+        width: clamp(100px, 30vw, 170px);
+        height: auto;
+        flex-shrink: 0;
+      }
+      .row .polaroid img {
+        width: 100%;
+        height: clamp(100px, 30vw, 165px);
+      }
+
+      .slide-L {
+        animation: slideL 20s linear infinite;
+      }
+      .slide-R {
+        animation: slideR 20s linear infinite;
+      }
+      @keyframes slideL {
+        from {
+          transform: translateX(0);
+        }
+        to {
+          transform: translateX(-50%);
+        }
+      }
+      @keyframes slideR {
+        from {
+          transform: translateX(-50%);
+        }
+        to {
+          transform: translateX(0);
+        }
+      }
+
+      /* ---------- popup of all pictures ---------- */
+      #popupScreen {
+        background: rgba(5, 0, 2, 0.78);
+        backdrop-filter: blur(8px);
+        z-index: 40;
+      }
+      .popup-title {
+        font-family: "Dancing Script", cursive;
+        font-size: clamp(1.6rem, 6vw, 2.6rem);
+        color: var(--gold);
+        margin: 0 0 18px 0;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+      }
+      .popup-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(64px, 1fr));
+        gap: 8px;
+        width: 100%;
+        max-width: 620px;
+        max-height: 68vh;
+        overflow: hidden;
+        padding: 4px;
+      }
+      .popup-grid img {
+        width: 100%;
+        height: 72px;
+        object-fit: cover;
+        border-radius: 10px;
+        border: 2px solid rgba(255, 255, 255, 0.85);
+        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.4);
+        opacity: 0;
+        transform: scale(0) rotate(-8deg);
+        transition:
+          opacity 0.45s ease,
+          transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      .popup-grid img.show {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+      }
+      .popup-grid img.hide {
+        opacity: 0;
+        transform: scale(0.2) rotate(12deg) translateY(-20px);
+        transition:
+          opacity 0.5s ease,
+          transform 0.5s ease-in;
+      }
+
+      /* ---------- secret code screen ---------- */
+      #secretScreen {
+        background: rgba(0, 0, 0, 0.45);
+        backdrop-filter: blur(6px);
+        z-index: 50;
+      }
+      .lock-icon {
+        font-size: clamp(2.4rem, 8vw, 3.2rem);
+        margin-bottom: 6px;
+      }
+      .secret-title {
+        font-family: "Dancing Script", cursive;
+        font-size: clamp(1.6rem, 6vw, 2.4rem);
+        color: #fff;
+        margin: 0 0 4px 0;
+      }
+      .secret-sub {
+        font-size: clamp(0.8rem, 3.5vw, 0.95rem);
+        color: #fff;
+        opacity: 0.85;
+        margin-bottom: 22px;
+      }
+      .code-input {
+        letter-spacing: 8px;
+        text-align: center;
+        font-size: clamp(1.2rem, 6vw, 1.6rem);
+        font-weight: 700;
+        color: var(--text-dark);
+        width: min(240px, 60vw);
+        padding: 14px 10px 14px 18px;
+        border-radius: 16px;
+        border: none;
+        outline: none;
+        background: #fff8ec;
+        box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.15);
+      }
+      .code-row {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        margin-bottom: 14px;
+      }
+      .code-submit {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        border: none;
+        background: linear-gradient(145deg, var(--main-red), var(--deep-red));
+        color: white;
+        font-size: 1.4rem;
+        cursor: pointer;
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
+      }
+      .code-error {
+        color: #ffb3bd;
+        font-size: 0.85rem;
+        font-weight: 700;
+        opacity: 0;
+        transition: opacity 0.3s;
+        min-height: 18px;
+      }
+      .shake {
+        animation: shakeCode 0.45s;
+      }
+      @keyframes shakeCode {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        20% {
+          transform: translateX(-10px);
+        }
+        40% {
+          transform: translateX(10px);
+        }
+        60% {
+          transform: translateX(-8px);
+        }
+        80% {
+          transform: translateX(8px);
+        }
+      }
+
+      #video-stage {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .zoom-vid {
+        width: 70%;
+        max-width: 350px;
+        border: 5px solid white;
+        border-radius: 10px;
+        opacity: 0;
+      }
+      .animate-zoom {
+        animation: zoomVanish 8s forwards;
+      }
+      @keyframes zoomVanish {
+        0% {
+          transform: scale(0.5);
+          opacity: 0;
+        }
+        10% {
+          transform: scale(1);
+          opacity: 1;
+        }
+        90% {
+          transform: scale(1.1);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(1.5);
+          opacity: 0;
+        }
+      }
+
+      /* ---------- real paper love letter ---------- */
+      #finalScreen {
+        perspective: 1200px;
+      }
+      .paper-note {
+        position: relative;
+        background-color: var(--paper);
+        background-image:
+          repeating-linear-gradient(
+            rgba(120, 90, 60, 0.05) 0px,
+            rgba(120, 90, 60, 0.05) 1px,
+            transparent 1px,
+            transparent 34px
+          ),
+          radial-gradient(
+            ellipse at 20% 15%,
+            rgba(255, 255, 255, 0.35),
+            transparent 55%
+          ),
+          radial-gradient(
+            ellipse at 80% 90%,
+            rgba(120, 80, 40, 0.12),
+            transparent 60%
+          ),
+          url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 0.3  0 0 0 0 0.22  0 0 0 0 0.12  0 0 0 0.35 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+        background-blend-mode: multiply, normal, normal, multiply;
+        padding: clamp(26px, 6vw, 46px) clamp(24px, 6.5vw, 48px);
+        width: 92%;
+        max-width: 480px;
+        line-height: 1.55;
+        color: var(--text-dark);
+        font-size: clamp(0.88rem, 3.5vw, 1.02rem);
+        font-family: "Caveat", "Playfair Display", cursive;
+        transform: rotate(-1.1deg);
+        box-shadow:
+          0 2px 0 rgba(255, 255, 255, 0.5) inset,
+          0 30px 55px rgba(0, 0, 0, 0.45),
+          0 8px 18px rgba(0, 0, 0, 0.35);
+        clip-path: polygon(
+          0.5% 2%,
+          6% 0%,
+          15% 1.2%,
+          25% 0.2%,
+          35% 1%,
+          46% 0%,
+          58% 1.1%,
+          70% 0.3%,
+          82% 1%,
+          92% 0%,
+          99.5% 1.6%,
+          100% 12%,
+          99.2% 28%,
+          100% 45%,
+          99.4% 62%,
+          100% 79%,
+          99.3% 92%,
+          100% 98.5%,
+          92% 100%,
+          80% 99%,
+          68% 100%,
+          55% 99.2%,
+          43% 100%,
+          30% 99%,
+          18% 100%,
+          8% 99.2%,
+          0% 97.5%,
+          0.8% 82%,
+          0% 66%,
+          0.9% 50%,
+          0% 34%,
+          0.7% 18%
+        );
+      }
+      .paper-note::before {
+        content: "";
+        position: absolute;
+        top: -14px;
+        left: 50%;
+        transform: translateX(-50%) rotate(-3deg);
+        width: 90px;
+        height: 26px;
+        background: rgba(255, 244, 214, 0.55);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+      }
+      .paper-note h2 {
+        font-family: "Dancing Script", cursive;
+      }
+      .paper-note p {
+        font-size: 1.18em;
+      }
+
+      canvas#fireworks {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 5;
+      }
+
+      .end-btn {
+        margin-top: 15px;
+        padding: 10px 30px;
+        background: linear-gradient(145deg, var(--main-red), var(--deep-red));
+        color: white;
+        border: none;
+        border-radius: 20px;
+        font-weight: bold;
+        font-family: "Quicksand", sans-serif;
+        cursor: pointer;
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.3);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- SCREEN 1 -->
+    <div id="screen1" class="active screen">
+      <div class="glass-card">
+        <img
+          class="img1"
+          src="Dudu Cute Sticker - Dudu Cute Smile - Descubre y comparte GIF.gif"
+        />
+        <h1 class="title-red">HEY BABY!</h1>
+        <p class="sub-text">WOULD YOU LIKE TO SEE YOUR GIFT?</p>
+        <div class="btn-row">
+          <button class="circle-btn" onclick="showSad()">✖</button>
+          <button class="circle-btn" onclick="runGift()">✔</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 2 -->
+    <div id="screenSad" class="screen">
+      <div class="glass-card">
+        <img src="gif" class="cat-img" />
+        <h1 class="title-red">AW PLEASE?</h1>
+        <p class="sub-text">I PREPARED THIS GIFT FOR YOU</p>
+        <button class="circle-btn" onclick="goBack()">←</button>
+      </div>
+    </div>
+
+    <!-- WELCOME -->
+    <div id="welcome" class="screen">
+      <h1
+        style="
+          font-family: &quot;Dancing Script&quot;;
+          font-size: clamp(2.5rem, 10vw, 5rem);
+          color: #fff;
+          text-shadow: 3px 3px rgba(0, 0, 0, 0.2);
+        "
+      >
+        <span class="red">W</span>elcome my <span class="red">love</span>,<br />
+        Hope you like this
+      </h1>
+      <span class="owner">-Jm, Verdeblanco</span>
+    </div>
+
+    <div id="musicTriggerScreen" class="screen">
+      <button class="play-music-btn" onclick="startMainShow()">
+        ▶ Play Me :)
+      </button>
+    </div>
+
+    <canvas id="fireworks"></canvas>
+
+    <div id="heartScreen" class="screen">
+      <div class="heart-area" id="heart-container">
+        <div class="center-label" id="heart-label">--you and me--</div>
+      </div>
+    </div>
+
+    <div id="galleryScreen" class="screen">
+      <div class="gallery-rows">
+        <div class="row slide-L" id="r1"></div>
+        <div class="row slide-R" id="r2"></div>
+        <div class="row slide-L" id="r3"></div>
+      </div>
+    </div>
+
+    <!-- ALL PICTURES POPUP -->
+    <div id="popupScreen" class="screen">
+      <div class="popup-title">Every moment with you 💕</div>
+      <div class="popup-grid" id="popupGrid"></div>
+    </div>
+
+    <div id="videoScreen" class="screen">
+      <div id="video-stage"></div>
+    </div>
+
+    <!-- SECRET CODE GATE -->
+    <div id="secretScreen" class="screen">
+      <div class="glass-card">
+        <div class="lock-icon">🔒</div>
+        <h2 class="secret-title">One last thing…</h2>
+        <p class="secret-sub">Enter the secret code to unlock my letter</p>
+        <div class="code-row">
+          <input
+            id="codeInput"
+            class="code-input"
+            type="text"
+            inputmode="numeric"
+            maxlength="8"
+            placeholder="••••••"
+            onkeydown="if (event.key === 'Enter') submitCode();"
+          />
+          <button class="code-submit" onclick="submitCode()">➜</button>
+        </div>
+        <div class="code-error" id="codeError">
+          Incorrect code, try again 💔
+        </div>
+      </div>
+    </div>
+
+    <div id="finalScreen" class="screen">
+      <div class="paper-note">
+        <h2 style="color: var(--main-red); font-size: 2rem; margin: 0">
+          My Love Rc,
+        </h2>
+        <p>
+          Every second with you is a treasure, a moment I hold close to my heart
+          as if it were the rarest jewel in the world. Thank you for being my
+          happiness, for painting my days with colors brighter than the sunrise,
+          and for turning even the simplest moments into memories worth keeping
+          forever. You are the reason my world feels alive, the melody to my
+          silence, and the light that guides me through every shadow. I love you
+          more than words can ever express, more than time can measure, and more
+          than eternity itself could hold.
+        </p>
+        <p style="text-align: right; font-weight: bold">— Yours Always ♥</p>
+        <button class="end-btn" onclick="location.reload()">END</button>
+      </div>
+    </div>
+
+    <script>
+      const heartPhotos = [
+        "1.jpg",
+        "23.jpg",
+        "3.jpg",
+        "21.jpg",
+        "22.jpg",
+        "6.jpg",
+        "20.jpg",
+        "8.jpg",
+        "9.jpg",
+        "10.jpg",
+        "11.jpg",
+        "19.jpg",
+        "13.jpg",
+        "14.jpg",
+        "15.jpg",
+        "16.jpg",
+        "17.jpg",
+        "18.jpg",
+      ];
+      const slidingPhotos = [
+        "1.jpg",
+        "23.jpg",
+        "24.jpg",
+        "21.jpg",
+        "22.jpg",
+        "2.jpg",
+        "20.jpg",
+        "8.jpg",
+        "9.jpg",
+        "10.jpg",
+        "11.jpg",
+        "19.jpg",
+        "13.jpg",
+        "14.jpg",
+        "15.jpg",
+        "16.jpg",
+        "17.jpg",
+        "18.jpg",
+        "3.jpg",
+        "4.jpg",
+        "5.jpg",
+      ];
+      const allPhotos = Array.from({ length: 24 }, (_, i) => `${i + 1}.jpg`);
+      const myVideos = ["1.mp4", "2.mp4", "3.mp4", "4.mp4", "5.mp4"];
+      const SECRET_CODE = "050121";
+
+      const FIREWORK_VOLUME_FULL = 0.55;
+      const FIREWORK_VOLUME_DUCKED = 0.2;
+      const FIREWORK_POOL_SIZE = 6;
+      const fireworkPool = Array.from({ length: FIREWORK_POOL_SIZE }, () => {
+        const a = new Audio("dragon-studio-fireworks-06-419024.mp3");
+        a.volume = FIREWORK_VOLUME_FULL;
+        return a;
+      });
+      let fireworkPoolIndex = 0;
+      function setFireworkVolume(v) {
+        fireworkPool.forEach((a) => (a.volume = v));
+      }
+      function playFireworkPop() {
+        const a = fireworkPool[fireworkPoolIndex];
+        fireworkPoolIndex = (fireworkPoolIndex + 1) % fireworkPool.length;
+        try {
+          a.pause();
+          a.currentTime = 0;
+        } catch (e) {}
+        a.play().catch(() => {});
+      }
+      const westlifeMusic = new Audio("1000027209.mp3");
+
+      /* ============================================================
+         PRELOADER
+         The show only needs each photo/video/song at a specific
+         later moment, but on a live host (GitHub Pages, etc.) they
+         still have to travel over the network the first time. Kick
+         every download off right away, in the background, while the
+         person is still looking at the very first screen — by the
+         time each screen actually needs an asset it should already
+         be sitting in the browser cache instead of loading live.
+      ============================================================ */
+      function preloadAssets() {
+        allPhotos.forEach((src) => {
+          const img = new Image();
+          img.src = src;
+        });
+
+        myVideos.forEach((src) => {
+          const vid = document.createElement("video");
+          vid.src = src;
+          vid.preload = "auto";
+          vid.muted = true;
+          vid.playsInline = true;
+          vid.style.display = "none";
+          document.body.appendChild(vid);
+          // nudge the browser to actually start buffering
+          vid.load();
+        });
+
+        fireworkPool.forEach((a) => {
+          a.preload = "auto";
+          a.load();
+        });
+        westlifeMusic.preload = "auto";
+        westlifeMusic.load();
+      }
+      preloadAssets();
+
+      function showSad() {
+        document.getElementById("screen1").classList.remove("active");
+        document.getElementById("screenSad").classList.add("active");
+      }
+      function goBack() {
+        document.getElementById("screenSad").classList.remove("active");
+        document.getElementById("screen1").classList.add("active");
+      }
+
+      async function runGift() {
+        document.getElementById("screen1").classList.remove("active");
+        const welcome = document.getElementById("welcome");
+        welcome.classList.add("active");
+        await new Promise((r) => setTimeout(r, 3500));
+        welcome.classList.remove("active");
+        startFireworks(true, true);
+        await new Promise((r) => setTimeout(r, 7000));
+        document.getElementById("musicTriggerScreen").classList.add("active");
+      }
+
+      async function startMainShow() {
+        // Duck the fireworks pop sound right away, before the heart
+        // photos even start forming, so it sits quietly under the
+        // love song instead of competing with it.
+        setFireworkVolume(FIREWORK_VOLUME_DUCKED);
+        westlifeMusic.play().catch((e) => console.log(e));
+        document
+          .getElementById("musicTriggerScreen")
+          .classList.remove("active");
+
+        document.getElementById("heartScreen").classList.add("active");
+        animateHeartFormation();
+        await new Promise((r) => setTimeout(r, 15000));
+        document.getElementById("heartScreen").classList.remove("active");
+
+        document.getElementById("galleryScreen").classList.add("active");
+        fillRows();
+        await new Promise((r) => setTimeout(r, 10000));
+        document.getElementById("galleryScreen").classList.remove("active");
+
+        document.getElementById("popupScreen").classList.add("active");
+        await showAllPictures();
+        document.getElementById("popupScreen").classList.remove("active");
+
+        document.getElementById("videoScreen").classList.add("active");
+        await runVideoSequence();
+        document.getElementById("videoScreen").classList.remove("active");
+
+        document.getElementById("secretScreen").classList.add("active");
+        setTimeout(() => document.getElementById("codeInput").focus(), 400);
+        await waitForSecretCode();
+        document.getElementById("secretScreen").classList.remove("active");
+
+        document.getElementById("finalScreen").classList.add("active");
+        startFireworks(true, true);
+      }
+
+      let secretResolve = null;
+      function waitForSecretCode() {
+        return new Promise((resolve) => {
+          secretResolve = resolve;
+        });
+      }
+      function submitCode() {
+        const raw = document.getElementById("codeInput").value.trim();
+        const digitsOnly = raw.replace(/\D/g, "");
+        const errorEl = document.getElementById("codeError");
+        if (digitsOnly === SECRET_CODE) {
+          errorEl.style.opacity = "0";
+          if (secretResolve) {
+            const resolve = secretResolve;
+            secretResolve = null;
+            resolve();
+          }
+        } else {
+          errorEl.style.opacity = "1";
+          const card = document.querySelector("#secretScreen .glass-card");
+          card.classList.remove("shake");
+          void card.offsetWidth;
+          card.classList.add("shake");
+        }
+      }
+
+      function showAllPictures() {
+        return new Promise((resolve) => {
+          const grid = document.getElementById("popupGrid");
+          grid.innerHTML = "";
+          const staggerIn = 70;
+          allPhotos.forEach((src, i) => {
+            const img = document.createElement("img");
+            img.src = src;
+            grid.appendChild(img);
+            setTimeout(() => img.classList.add("show"), i * staggerIn);
+          });
+          const visibleFor = allPhotos.length * staggerIn + 2600;
+          setTimeout(() => {
+            const imgs = grid.querySelectorAll("img");
+            const staggerOut = 35;
+            imgs.forEach((img, i) => {
+              setTimeout(() => img.classList.add("hide"), i * staggerOut);
+            });
+            setTimeout(() => resolve(), imgs.length * staggerOut + 700);
+          }, visibleFor);
+        });
+      }
+
+      async function runVideoSequence() {
+        const stage = document.getElementById("video-stage");
+        for (let vid of myVideos) {
+          stage.innerHTML = `<video src="${vid}" autoplay muted playsinline class="zoom-vid animate-zoom"></video>`;
+          await new Promise((r) => setTimeout(r, 5000));
+          stage.innerHTML = "";
+        }
+      }
+
+      function animateHeartFormation() {
+        const container = document.getElementById("heart-container");
+        const total = heartPhotos.length;
+        const centerX = window.innerWidth / 2;
+        const centerY = window.innerHeight / 2;
+        const isMobile = window.innerWidth < 768;
+        const scale = isMobile
+          ? Math.min(window.innerWidth / 28, 12)
+          : Math.min(window.innerWidth / 35, 18);
+
+        for (let i = 0; i < total; i++) {
+          const t = (i / total) * Math.PI * 2;
+          const x = 16 * Math.pow(Math.sin(t), 3);
+          const y = -(
+            13 * Math.cos(t) -
+            5 * Math.cos(2 * t) -
+            2 * Math.cos(3 * t) -
+            Math.cos(4 * t)
+          );
+          const pol = document.createElement("div");
+          pol.className = "polaroid";
+          pol.style.left = centerX + "px";
+          pol.style.top = centerY + "px";
+          pol.style.opacity = "0";
+          pol.innerHTML = `<img src="${heartPhotos[i]}">`;
+          container.appendChild(pol);
+          setTimeout(() => {
+            pol.style.opacity = "1";
+            pol.style.left = centerX + x * scale - 40 + "px";
+            pol.style.top = centerY + y * scale - 40 + "px";
+            pol.style.transform = `rotate(${(Math.random() - 0.5) * 20}deg)`;
+          }, i * 600);
+        }
+        setTimeout(() => {
+          document.getElementById("heart-label").style.opacity = "1";
+        }, 4000);
+      }
+
+      function fillRows() {
+        ["r1", "r2", "r3"].forEach((id) => {
+          const row = document.getElementById(id);
+          row.innerHTML = "";
+          for (let i = 0; i < 15; i++) {
+            const pol = document.createElement("div");
+            pol.className = "polaroid";
+            pol.innerHTML = `<img src="${slidingPhotos[Math.floor(Math.random() * slidingPhotos.length)]}">`;
+            row.appendChild(pol);
+          }
+        });
+      }
+
+      /* ============================================================
+         REAL FIREWORKS ENGINE
+         Rockets launch from the bottom, leave a glowing trail, and
+         burst into sparks. In heart mode the sparks fly out along the
+         parametric heart curve, so every burst still traces a heart
+         — just with real launch/trail/gravity/twinkle physics.
+      ============================================================ */
+      const canvas = document.getElementById("fireworks");
+      const ctx = canvas.getContext("2d");
+
+      let rockets = [];
+      let sparks = [];
+      let flashes = [];
+      let fireworksHeartMode = true;
+      let globalPlaySound = false;
+      let fireworksRAF = null;
+      let fireworksLastLaunch = 0;
+
+      const palettes = [
+        ["#ff5d73", "#ff9fb2", "#ffe3e8"],
+        ["#ffd166", "#ffe8a3", "#fff6dc"],
+        ["#ff477e", "#ffffff", "#ffc2d6"],
+        ["#f72585", "#ffbe0b", "#ffffff"],
+        ["#ff6b6b", "#ff9770", "#ffd6a5"],
+      ];
+
+      function heartUnitVector(t) {
+        const x = 16 * Math.pow(Math.sin(t), 3);
+        const y = -(
+          13 * Math.cos(t) -
+          5 * Math.cos(2 * t) -
+          2 * Math.cos(3 * t) -
+          Math.cos(4 * t)
+        );
+        return { x: x / 17, y: y / 17 };
+      }
+
+      function launchRocket() {
+        const x = canvas.width * 0.12 + Math.random() * canvas.width * 0.76;
+        const targetY = canvas.height * (0.16 + Math.random() * 0.28);
+        rockets.push({
+          x,
+          y: canvas.height + 10,
+          targetY,
+          vy: -(6.2 + Math.random() * 2.2),
+          trail: [],
+          palette: palettes[Math.floor(Math.random() * palettes.length)],
+        });
+      }
+
+      function explodeRocket(r) {
+        const count = 64;
+        const scale = Math.min(canvas.width, canvas.height) / 9;
+        const sizeVariance = 0.65 + Math.random() * 0.55;
+        if (globalPlaySound) {
+          playFireworkPop();
+        }
+        flashes.push({ x: r.x, y: r.y, life: 1 });
+        for (let i = 0; i < count; i++) {
+          let vx, vy;
+          if (fireworksHeartMode) {
+            const t = (i / count) * Math.PI * 2;
+            const v = heartUnitVector(t);
+            vx = v.x * scale * sizeVariance * 0.09;
+            vy = v.y * scale * sizeVariance * 0.09;
+          } else {
+            const ang = Math.random() * Math.PI * 2;
+            const spd = 2 + Math.random() * 4;
+            vx = Math.cos(ang) * spd;
+            vy = Math.sin(ang) * spd;
+          }
+          sparks.push({
+            x: r.x,
+            y: r.y,
+            vx,
+            vy,
+            life: 1,
+            decay: 0.0075 + Math.random() * 0.009,
+            color: r.palette[Math.floor(Math.random() * r.palette.length)],
+            size: 1.4 + Math.random() * 1.6,
+            flicker: Math.random() * 10,
+          });
+        }
+      }
+
+      function startFireworks(heartMode, playSound) {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        fireworksHeartMode = heartMode;
+        globalPlaySound = playSound;
+
+        if (fireworksRAF) cancelAnimationFrame(fireworksRAF);
+
+        function loop(time) {
+          if (time - fireworksLastLaunch > 1250 + Math.random() * 550) {
+            launchRocket();
+            fireworksLastLaunch = time;
+          }
+
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+          // rockets rising
+          for (let i = rockets.length - 1; i >= 0; i--) {
+            const r = rockets[i];
+            r.trail.push({ x: r.x, y: r.y });
+            if (r.trail.length > 9) r.trail.shift();
+            r.y += r.vy;
+            r.vy += 0.02;
+
+            r.trail.forEach((p, idx) => {
+              ctx.globalAlpha = (idx / r.trail.length) * 0.55;
+              ctx.fillStyle = "#fff3cf";
+              ctx.beginPath();
+              ctx.arc(p.x, p.y, 1.6, 0, Math.PI * 2);
+              ctx.fill();
+            });
+            ctx.globalAlpha = 1;
+            ctx.fillStyle = "#fff8e1";
+            ctx.beginPath();
+            ctx.arc(r.x, r.y, 2.2, 0, Math.PI * 2);
+            ctx.fill();
+
+            if (r.y <= r.targetY || r.vy >= 0) {
+              explodeRocket(r);
+              rockets.splice(i, 1);
+            }
+          }
+
+          // explosion flashes
+          for (let i = flashes.length - 1; i >= 0; i--) {
+            const f = flashes[i];
+            f.life -= 0.09;
+            if (f.life <= 0) {
+              flashes.splice(i, 1);
+              continue;
+            }
+            const grad = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, 55);
+            grad.addColorStop(0, `rgba(255,255,255,${f.life * 0.55})`);
+            grad.addColorStop(1, "rgba(255,255,255,0)");
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.arc(f.x, f.y, 55, 0, Math.PI * 2);
+            ctx.fill();
+          }
+
+          // sparks
+          for (let i = sparks.length - 1; i >= 0; i--) {
+            const p = sparks[i];
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy += 0.045;
+            p.vx *= 0.99;
+            p.vy *= 0.995;
+            p.life -= p.decay;
+            if (p.life <= 0) {
+              sparks.splice(i, 1);
+              continue;
+            }
+            const twinkle = 0.55 + 0.45 * Math.sin(p.flicker + time * 0.012);
+            ctx.globalAlpha = Math.max(p.life, 0) * twinkle;
+            ctx.fillStyle = p.color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fill();
+          }
+          ctx.globalAlpha = 1;
+
+          fireworksRAF = requestAnimationFrame(loop);
+        }
+        fireworksRAF = requestAnimationFrame(loop);
+      }
+    </script>
+  </body>
+</html>
